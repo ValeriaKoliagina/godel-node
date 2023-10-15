@@ -1,29 +1,17 @@
 import { Command } from 'commander';
 import * as fs from 'fs';
-import * as readline from 'readline';
 import { stderr, stdin, stdout } from 'process';
 import { resolve } from 'path';
 import { parse } from 'csv-parse';
-// import{ readFile } from 'fs/promises';
+import { Transform } from 'stream';
+
 
 const program = new Command();
 
 const readMyFile = async (path) => {
-// 1 approach
-//   try {
-//     const filePath = resolve(path);
-//     const info = await readFile(filePath, { encoding: 'utf8' });
-//     console.log(info);
-//   } catch (error) {
-//     console.error(`There is an error reading the file: ${error.message}`);
-//  }
-
-// 2 approach
   const readStream = fs.createReadStream(resolve(path), { encoding: 'utf-8' });
 
-  readStream.on('data', chunk => {
-    stdout.write(chunk);
-  })
+  readStream.pipe(stdout);
 
   readStream.on('error', err => {
     stderr.write(`Something went wrong: ${err.message}`)
@@ -31,19 +19,26 @@ const readMyFile = async (path) => {
 };
 
 const readConsole = async () => {
-  const consoleInterface = readline.createInterface({ input: stdin, output: stdout });
+  const toUpperCaseTransform = new Transform({
+    transform(chunk, encoding, callback) {
+      // is it possible to use encoding instead of toString()?
+      callback(null, chunk.toString().toUpperCase())
+    }
+  })
 
-  consoleInterface.question('Could you please explain better this task ', answer => {
-    stdout.write(answer.toUpperCase());
-
-    consoleInterface.close();
-  });
+  stdin.pipe(toUpperCaseTransform).pipe(stdout);
 };
 
 const readCsvFile = async (path) => {
   const pathname = resolve(path);
   const extension = pathname.split('.').at(-1).toLowerCase();
-  const data = [];
+
+  const stringifyTransform = new Transform({
+    objectMode: true,
+    transform(chunk, encoding, callback) {
+      callback(null, JSON.stringify(chunk))
+    }
+  })
 
   if (extension !== 'csv') {
     return stdout.write('');
@@ -52,12 +47,9 @@ const readCsvFile = async (path) => {
   try {
     fs.createReadStream(pathname)
       .pipe(parse({ delimiter: ',', columns: true }))
-      .on('data', row => {
-          data.push(row);
-      })
-      .on('end', () => {
-        stdout.write(data.length ? JSON.stringify(data) : '');
-      })
+      // with such approach we see incorrect JSON format or should we push info again to array
+      .pipe(stringifyTransform)
+      .pipe(stdout)
       .on('error', (err) => {
         stderr.write(`Oops: ${err.message}`)
       });
@@ -69,6 +61,7 @@ const readCsvFile = async (path) => {
 const convertFile = async (path) => {
   const pathname = resolve(path);
   const [name, extension] = pathname.split('.');
+  const data = [];
 
   if (extension.toLowerCase() !== 'csv') {
     return stdout.write('');
@@ -77,13 +70,18 @@ const convertFile = async (path) => {
   try {
     const newJsonFile = fs.createWriteStream(`${name}.json`);
 
+    newJsonFile.on('finish', () => {
+      stdout.write('File was created');
+    })
+
     fs.createReadStream(pathname)
       .pipe(parse({ delimiter: ',', columns: true }))
       .on('data', row => {
-          newJsonFile.write(JSON.stringify(row));
+          data.push(row);;
       })
       .on('end', () => {
-        stdout.write('File was created');
+        newJsonFile.write(data.length ? JSON.stringify(data) : '');
+        newJsonFile.end();
       })
       .on('error', (err) => {
         stderr.write(`Oops: ${err.message}`)
