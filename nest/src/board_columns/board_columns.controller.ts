@@ -1,8 +1,9 @@
-import { Body, Controller, NotFoundException, Post } from '@nestjs/common';
+import { Body, Controller, NotFoundException, Param, Post, Put } from '@nestjs/common';
 
 import { KanbanColumnsService } from 'src/kanban_columns/kanban_columns.service';
 import { BoardColumnsService } from './board_columns.service';
 import { CreateBoardColumnsDto } from './dto/create-board-columns.dto';
+import { UpdateBoardColumnsDto } from './dto/update-board-columns.dto';
 
 @Controller('board-columns')
 export class BoardColumnsController {
@@ -17,10 +18,15 @@ export class BoardColumnsController {
     const kanbanColumn = await this.kanbanColumnsService.findOne(kanban_id);
 
     if (!kanbanColumn) {
-      throw new NotFoundException();
+      throw new NotFoundException('Kanban column does not exist');
     }
 
     column.name = kanbanColumn.name;
     return this.boardColumnsService.create(column);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() column: UpdateBoardColumnsDto) {
+    return this.boardColumnsService.update(id, column);
   }
 }
