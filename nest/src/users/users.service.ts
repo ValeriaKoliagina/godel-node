@@ -20,11 +20,11 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async findAll() {
+  findAll() {
     return this.userRepository.find();
   }
 
-  async findOne(id: string) {
+  findOne(id: string) {
     return this.userRepository.findOneBy({ id });
   }
 }

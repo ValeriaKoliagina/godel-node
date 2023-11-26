@@ -12,8 +12,8 @@ export class BoardColumn {
 
   @ManyToOne(type => Board)
   @JoinColumn({ name: "board_id" })
-  board_id: Board;
+  board: Board;
 
-  @OneToMany(type => Task, task => task.board_column_id)
+  @OneToMany(type => Task, task => task.board_column)
   tasks: Task[];
 }

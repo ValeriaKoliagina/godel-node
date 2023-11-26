@@ -12,9 +12,24 @@ services:
     build:
       dockerfile: Dockerfile
     depends_on:
-      - db
+      - migrations
     ports:
       - 127.0.0.1:3000:3000
+    environment:
+      PG_HOST: ${PG_HOST}
+      PG_PORT: ${PG_PORT}
+      PG_USERNAME: ${PG_USERNAME}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DATABASE: ${PG_DATABASE}
+  
+  migrations:
+    build:
+      context: .
+    links:
+      - 'db'
+    depends_on:
+      - 'db'
+    command: ['npm', 'run', 'setup']
     environment:
       PG_HOST: ${PG_HOST}
       PG_PORT: ${PG_PORT}

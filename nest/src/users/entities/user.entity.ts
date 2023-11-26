@@ -28,7 +28,7 @@ export class User {
   })
   role: UserRole
 
-  @OneToMany(type => Task, task => task.assignee_id)
+  @OneToMany(type => Task, task => task.assignee)
   tasks: Task[];
 
   @ManyToMany(type => Board, {

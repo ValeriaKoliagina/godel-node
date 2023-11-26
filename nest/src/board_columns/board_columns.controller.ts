@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, NotFoundException, Post } from '@nestjs/common';
 
 import { KanbanColumnsService } from 'src/kanban_columns/kanban_columns.service';
 import { BoardColumnsService } from './board_columns.service';
@@ -17,7 +17,7 @@ export class BoardColumnsController {
     const kanbanColumn = await this.kanbanColumnsService.findOne(kanban_id);
 
     if (!kanbanColumn) {
-      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException();
     }
 
     column.name = kanbanColumn.name;

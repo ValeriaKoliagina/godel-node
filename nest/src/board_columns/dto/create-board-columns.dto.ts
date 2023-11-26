@@ -1,8 +1,12 @@
+import { IsUUID } from "class-validator";
 import { Board } from "src/boards/entities/board.entity";
-import { KanbanColumn } from "src/kanban_columns/entities/kanban_column.entity";
 
 export class CreateBoardColumnsDto {
+  @IsUUID()
   kanban_id: string;
-  board_id: Board;
+
+  @IsUUID()
+  board_id: string;
+
   name: string;
 }

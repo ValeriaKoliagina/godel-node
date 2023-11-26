@@ -16,13 +16,13 @@ export class Task {
 
   @ManyToOne(type => User)
   @JoinColumn({ name: "assignee_id" })
-  assignee_id: User;
+  assignee: User;
 
   @ManyToOne(type => Board)
   @JoinColumn({ name: "board_id" })
-  board_id: Board;
+  board: Board;
 
   @ManyToOne(type => BoardColumn)
   @JoinColumn({ name: "board_column_id" })
-  board_column_id: BoardColumn;
+  board_column: BoardColumn;
 }

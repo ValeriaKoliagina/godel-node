@@ -11,10 +11,10 @@ export class Board {
   @Column()
   name: string;
 
-  @OneToMany(type => Task, task => task.board_id)
+  @OneToMany(type => Task, task => task.board)
   tasks: Task[];
 
-  @OneToMany(type => BoardColumn, boardColumn => boardColumn.board_id)
+  @OneToMany(type => BoardColumn, boardColumn => boardColumn.board)
   board_columns: BoardColumn[];
 
   @ManyToMany((type) => User, (user) => user.id, {
