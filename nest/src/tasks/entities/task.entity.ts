@@ -18,11 +18,20 @@ export class Task {
   @JoinColumn({ name: "assignee_id" })
   assignee: User;
 
+  @Column()
+  assignee_id: string;
+
   @ManyToOne(type => Board)
   @JoinColumn({ name: "board_id" })
   board: Board;
 
+  @Column()
+  board_id: string;
+
   @ManyToOne(type => BoardColumn)
   @JoinColumn({ name: "board_column_id" })
   board_column: BoardColumn;
+
+  @Column()
+  board_column_id: string;
 }

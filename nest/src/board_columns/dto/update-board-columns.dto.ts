@@ -1,9 +1,11 @@
-import { IsOptional, IsUUID } from "class-validator";
+import { IsNotEmpty, IsOptional, IsUUID } from "class-validator";
 
 export class UpdateBoardColumnsDto {
   @IsOptional()
   @IsUUID()
-  board_id?: string;
+  board_id: string;
 
-  name?: string;
+  @IsOptional()
+  @IsNotEmpty()
+  name: string;
 }

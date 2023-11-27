@@ -21,4 +21,12 @@ export class BoardColumnsService {
     await this.boardColumnRepository.update(id, updateBoardColumnsDto);
     return this.boardColumnRepository.findOneBy({ id });
   }
+
+  findOne(id: string) {
+    return this.boardColumnRepository.findOneBy({ id });
+  }
+
+  async delete(id: string) {
+    await this.boardColumnRepository.delete(id);
+  }
 }
