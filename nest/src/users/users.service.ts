@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { saltPassword } from './users.utils';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -25,6 +26,18 @@ export class UsersService {
   }
 
   findOne(id: string) {
+    return this.userRepository.findOne({ 
+      where: { id },
+      relations: ['tasks', 'boards']
+    });
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    await this.userRepository.update(id, updateUserDto);
     return this.userRepository.findOneBy({ id });
+  }
+
+  async delete(id: string) {
+    await this.userRepository.delete(id);
   }
 }

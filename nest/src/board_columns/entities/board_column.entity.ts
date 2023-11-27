@@ -10,9 +10,14 @@ export class BoardColumn {
   @Column()
   name: string;
 
-  @ManyToOne(type => Board)
+  @ManyToOne(type => Board, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "board_id" })
   board: Board;
+
+  @Column()
+  board_id: string;
 
   @OneToMany(type => Task, task => task.board_column)
   tasks: Task[];
