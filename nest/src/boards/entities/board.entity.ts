@@ -1,13 +1,21 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+
 import { Task } from '../../tasks/entities/task.entity';
 import { BoardColumn } from '../../board_columns/entities/board_column.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity("boards")
 export class Board {
+  @ApiProperty({
+    format: 'uuid'
+  })
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @ApiProperty({
+    example: 'Exaple board'
+  })
   @Column()
   name: string;
 
@@ -18,7 +26,8 @@ export class Board {
   board_columns: BoardColumn[];
 
   @ManyToMany((type) => User, (user) => user.id, {
-    onDelete: "CASCADE",
+    cascade: true,
+    onDelete: "CASCADE"
   })
   @JoinTable({
     name: "users_boards",

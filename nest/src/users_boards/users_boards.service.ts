@@ -1,7 +1,8 @@
 import { Body, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersBoard } from './entities/users_board.entity';
 import { Repository } from 'typeorm';
+
+import { UsersBoard } from './entities/users_board.entity';
 import { CreateUsersBoardDto } from './dto/create-user-board.dto';
 import { UpdateUsersBoardDto } from './dto/update-user-board.dto';
 
@@ -26,9 +27,8 @@ export class UsersBoardsService {
     });
   }
 
-  async update(id: string, updateUsersBoardDto: UpdateUsersBoardDto) {
-    await this.usersBoardRepository.update(id, updateUsersBoardDto);
-    return this.usersBoardRepository.findOneBy({ id });
+  update(id: string, updateUsersBoardDto: UpdateUsersBoardDto) {
+    return this.usersBoardRepository.save({ id, ...updateUsersBoardDto });
   }
 
   async delete(id: string) {

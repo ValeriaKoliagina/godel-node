@@ -17,13 +17,16 @@ export class BoardColumnsService {
     return this.boardColumnRepository.save(createBoardColumnsDto);
   }
 
-  async update(id: string, updateBoardColumnsDto: UpdateBoardColumnsDto) {
-    await this.boardColumnRepository.update(id, updateBoardColumnsDto);
-    return this.boardColumnRepository.findOneBy({ id });
+  update(id: string, updateBoardColumnsDto: UpdateBoardColumnsDto) {
+    return this.boardColumnRepository.save({ id, ...updateBoardColumnsDto });
   }
 
   findOne(id: string) {
     return this.boardColumnRepository.findOneBy({ id });
+  }
+
+  findAll() {
+    return this.boardColumnRepository.find();
   }
 
   async delete(id: string) {
