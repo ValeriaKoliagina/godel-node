@@ -27,9 +27,8 @@ export class BoardsService {
     });
   }
 
-  async update(id: string, updateBoardColumnsDto: BoardDto) {
-    await this.boardRepository.update(id, updateBoardColumnsDto);
-    return this.boardRepository.findOneBy({ id });
+  update(id: string, updateBoardColumnsDto: BoardDto) {
+    return this.boardRepository.save({ id, ...updateBoardColumnsDto });
   }
 
   async delete(id: string) {

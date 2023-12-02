@@ -19,6 +19,7 @@ import { Board } from './boards/entities/board.entity';
 import { Task } from './tasks/entities/task.entity';
 import { KanbanColumn } from './kanban_columns/entities/kanban_column.entity';
 import { UsersBoard } from './users_boards/entities/users_board.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { UsersBoard } from './users_boards/entities/users_board.entity';
     TasksModule,
     BoardColumnsModule,
     UsersBoardsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
